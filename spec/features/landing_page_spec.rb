@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe 'Landing Page' do
   before :each do 
-    user1 = User.create(name: "User One", email: "user1@test.com")
-    user2 = User.create(name: "User Two", email: "user2@test.com")
+    user1 = User.create(name: "User One", email: "user1@test.com", password: "password", password_confirmation: "password")
+    user2 = User.create(name: "User Two", email: "user2@test.com", password: "password2", password_confirmation: "password2")
     visit '/'
   end 
 
@@ -23,8 +23,8 @@ RSpec.describe 'Landing Page' do
   end 
 
   it 'lists out existing users' do 
-    user1 = User.create(name: "User One", email: "user1@test.com")
-    user2 = User.create(name: "User Two", email: "user2@test.com")
+    user1 = User.create(name: "User One", email: "user1@test.com", password: "password", password_confirmation: "password")
+    user2 = User.create(name: "User Two", email: "user2@test.com", password: "password2", password_confirmation: "password2")
 
     expect(page).to have_content('Existing Users:')
 
@@ -33,4 +33,37 @@ RSpec.describe 'Landing Page' do
       expect(page).to have_content(user2.email)
     end     
   end 
+
+  describe 'user log in' do
+    it 'can log in with valid credentials' do
+
+      user = User.create(name: "User One", email: "test@email.com", password: "password", password_confirmation: "password")
+
+      visit '/'
+
+      click_button "Log In"
+
+      expect(current_path).to eq(login_path)
+
+      fill_in :email, with: user.email
+      fill_in :password, with: user.password
+      click_button "Log In"
+
+      expect(current_path).to eq(user_path(user.id))
+      expect(page).to have_content("User One's Dashboard")
+    end
+  end
+
+  describe "user cant log in with incorrect credentials" do
+    it 'cant log in with entering credentials' do
+      user = User.create(name: "User One", email: "email.com", password: "password", password_confirmation: "password") 
+
+      visit '/'
+
+      click_button "Log In"
+
+      expect(current_path).to eq(login_path)
+      expect(page).to have_content("Email or password is incorrect")
+    end
+  end
 end
