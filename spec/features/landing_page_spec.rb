@@ -26,6 +26,20 @@ RSpec.describe 'Landing Page' do
     user1 = User.create(name: "User One", email: "user1@test.com", password: "password", password_confirmation: "password")
     user2 = User.create(name: "User Two", email: "user2@test.com", password: "password2", password_confirmation: "password2")
 
+    visit '/'
+
+    click_button "Log In"
+
+    expect(current_path).to eq(new_session_path)
+
+    fill_in :email, with: user1.email
+    fill_in :password, with: user1.password
+
+    click_button "Log In"
+
+    expect(page).to have_content("User One's Dashboard")
+
+    visit '/'
     expect(page).to have_content('Existing Users:')
 
     within('.existing-users') do 
@@ -43,7 +57,7 @@ RSpec.describe 'Landing Page' do
 
       click_button "Log In"
 
-      expect(current_path).to eq(login_path)
+      expect(current_path).to eq(new_session_path)
 
       fill_in :email, with: user.email
       fill_in :password, with: user.password
@@ -62,7 +76,7 @@ RSpec.describe 'Landing Page' do
 
       click_button "Log In"
 
-      expect(current_path).to eq(login_path)
+      expect(current_path).to eq(new_session_path)
       expect(page).to have_content("Email or password is incorrect")
     end
   end

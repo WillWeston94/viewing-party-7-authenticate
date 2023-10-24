@@ -16,11 +16,20 @@
     </nav>
 
     <% flash.each do |name, msg| %>
-      <%= content_tag :div, msg, class: name %>
+      <strong><%= content_tag :div, msg, class: name %></strong>
     <% end %>
 
     <h1>Viewing Party Lite</h1>
 
     <%= yield %>
   </body>
+
+  <% if current_user %>
+    <div class="Log_out">
+    <%= button_to "Log Out", logout_path, method: :delete %>
+    </div>
+  <% else %>
+    <%= link_to "Log In", new_session_path %>
+    <%= link_to "Register", register_path %>
+  <% end %>
 </html>

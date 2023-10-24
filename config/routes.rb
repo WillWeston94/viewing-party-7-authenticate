@@ -11,6 +11,12 @@ Rails.application.routes.draw do
   get '/users/:user_id/movies/:movie_id/viewing_parties/new', to: 'viewing_parties#new'
   post '/users/:user_id/movies/:movie_id/viewing_parties', to: 'viewing_parties#create'
 
-  get '/login', to: 'users#login_form'
-  post '/login', to: 'users#login_user'
+  resources :sessions, only: %w[new create]
+
+  delete '/logout', to: 'sessions#destroy', as: 'logout'
+
+  namespace :admin do
+    get '/dashboard', to: 'dashboard#index'
+    get '/users/:id', to: 'users#show', as: 'user'
+  end
 end

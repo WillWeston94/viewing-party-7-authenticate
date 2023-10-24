@@ -5,4 +5,6 @@ class User <ApplicationRecord
 
   has_secure_password
   has_many :viewing_parties
+
+  enum role: %w(default manager admin)
 end 
